@@ -1,4 +1,6 @@
 use anchor_lang::prelude::*;
+use anchor_lang::system_program::{create_account, CreateAccount};
+use anchor_spl::{token::{InitializeMint, Token}, associated_token::AssociatedToken};
 
 declare_id!("ErAmA79CeCw8RLQVKQasKSowveXuPfwQSSunm89ZM4fo");
 
@@ -27,19 +29,44 @@ pub mod contract {
         application.applicant = ctx.accounts.applicant.key();
         application.bump = *ctx.bumps.get("application").unwrap();
         application.state = 0;
+
+        msg!("Creating the account");
+        create_account(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                CreateAccount {
+                    from: ctx.accounts.org.to_account_info(),
+                    to: ctx.accounts.applicant.to_account_info(),
+                },
+            ),
+            10000000,
+            82,
+            &ctx.accounts.token_program.key(),
+        )?;
+
+        // initialize_mint(
+        //     CpiContext::new(
+        //         ctx.accounts.token_program.to_account_info(),
+        //         InitializeMint {
+        //             mint: ctx.accounts.mint.to_account_info(),
+        //             rent: ctx.accounts.rent.to_account_info(),
+        //         },
+        //     ),
+        //     0,
+        //     &ctx.accounts.mint_authority.key(),
+        //     Some(&ctx.accounts.mint_authority.key()),
+        // )?;
         Ok(())
     }
 }
 
 #[account]
-// #[derive(Default)]
 pub struct Org {
     key: Pubkey,
     authority: Pubkey,
 }
 
 #[account]
-// #[derive(Default)]
 pub struct Application {
     pub applicant: Pubkey,
     state: u8,
@@ -50,16 +77,20 @@ pub struct Application {
 pub struct Apply<'info> {
     #[account(
         init,
-        payer = applicant,
+        payer = payer,
         space=8+32+8+1,
-        seeds = [b"org-applications", org.key().as_ref(), applicant.key().as_ref()],
-        bump
+        // seeds = [b"org-applications", org.key().as_ref(), applicant.key().as_ref()],
+        // bump
     )]
     pub application: Account<'info, Application>,
     #[account(mut)]
     pub applicant: Signer<'info>,
+    #[account(mut)]
+    pub payer: Signer<'info>,
     #[account()]
     pub org: Account<'info, Org>,
+    pub rent: Sysvar<'info, Rent>,
+    pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
 }
 
@@ -77,6 +108,7 @@ pub struct Initialize<'info> {
         // seeds = [b"org", payer.key().as_ref()],
         // bump
     )]
+    #[account()]
     pub org: Account<'info, Org>,
     pub system_program: Program<'info, System>,
 }
