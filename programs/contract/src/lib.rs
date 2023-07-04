@@ -52,14 +52,15 @@ pub mod contract {
         let src = &mut ctx.accounts.source;
         let t = s.score.checked_add(score.checked_mul(src.weight).unwrap()).unwrap();
         s.score = t.checked_div(2).unwrap();
+        ctx.accounts.score.owner = ctx.accounts.applicant.key();
         Ok(())
     }
 
-    pub fn make_source(ctx: Context<Sourcing>, source: String, skill: String, weight: u8)-> Result<()> {
-        let s = &mut ctx.accounts.source;
-        s.source = source;
-        s.skill = skill;
-        s.weight = weight;
+    pub fn make_source(ctx: Context<Sourcing>, name: String, skill: String, weight: u8)-> Result<()> {
+        let source = &mut ctx.accounts.source;
+        source.name = name;
+        source.skill = skill;
+        source.weight = weight;
         Ok(())
     }
 }
@@ -84,7 +85,7 @@ pub struct Score {
 
 #[account]
 pub struct Source {
-    pub source: String,
+    pub name: String,
     pub skill: String,
     pub weight: u8,
 }
@@ -96,10 +97,13 @@ pub struct Org {
     pub bump: u8,
 }
 #[derive(Accounts)]
+#[instruction(name: String, skill: String)]
 pub struct Sourcing<'info> {
     #[account(
         init,
         space = 8 + std::mem::size_of::<Score>(),
+        seeds = [b"source", name.as_bytes(), skill.as_bytes()],
+        bump,
         payer = authority
     )]
     pub source: Account<'info, Source>,
@@ -110,6 +114,7 @@ pub struct Sourcing<'info> {
 
 #[derive(Accounts)]
 pub struct Rating<'info>{
+    ///CHECK: This is not dangerous because we don't read or write from this account
     #[account()]
     pub applicant: AccountInfo<'info>,
     #[account(mut)]

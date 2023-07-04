@@ -111,7 +111,7 @@ describe("contract", () => {
       env.connection,
       authority,
       mint.publicKey,
-      applicant.publicKey,
+      applicant.publicKey
     );
 
     console.log("ata", mintATA.address.toBase58(), mintATA.amount);
@@ -137,10 +137,44 @@ describe("contract", () => {
       env.connection,
       authority,
       mint.publicKey,
-      applicant.publicKey,
+      applicant.publicKey
     );
     console.log(mintATA.amount);
     // const applicationAccount = await program.account.application.fetch(applicationPDA);
     // console.log("All application data: ", applicationAccount);
+
+    const tx2 = await program.methods
+      .makeSource("a", "b", 5)
+      .accounts({
+        authority: authority.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .signers([authority])
+      .rpc();
+    console.log("Sourcing signature", tx2);
+    const sourceAddress = PublicKey.findProgramAddressSync(
+      [Buffer.from("source"), Buffer.from("a"), Buffer.from("b")],
+      program.programId
+    )[0];
+    const sourceAccount = await program.account.source.fetch(sourceAddress);
+    console.log("All source data: ", sourceAccount);
+
+    const tx3 = await program.methods.submitRate(3).accounts({
+      applicant: applicant.publicKey,
+      mint: mint.publicKey,
+      source: sourceAddress,
+      org: orgAddress,
+      authority: authority.publicKey,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      systemProgram: SystemProgram.programId,
+    }).signers([authority]).rpc();
+    console.log("Rating signature", tx3);
+
+    const ratingAddress = PublicKey.findProgramAddressSync(
+      [Buffer.from("rating"), orgAddress.toBuffer(), applicant.publicKey.toBuffer(), sourceAddress.toBuffer()],
+      program.programId
+    )[0];
+    const scoreAccount = await program.account.score.fetch(ratingAddress);
+    console.log("All score data: ", scoreAccount);
   });
 });
