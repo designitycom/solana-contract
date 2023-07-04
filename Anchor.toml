@@ -1,8 +1,8 @@
 [features]
-seeds = false
+seeds = true
 skip-lint = false
 [programs.localnet]
-contract = "ErAmA79CeCw8RLQVKQasKSowveXuPfwQSSunm89ZM4fo"
+contract = "GPbJzd35DJy3wxDnyzy3kdy4qFbNeBxhTMbs2erYkjJL"
 
 [registry]
 url = "https://api.apr.dev"
