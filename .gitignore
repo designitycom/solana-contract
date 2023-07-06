@@ -1,5 +1,4 @@
-/target
-/program/target
-/program/test-ledger
-/node_modules
-/test-ledger
+/old-test
+/solana-hello/dist
+/solana-hello/node_modules
+/solana-hello/src/program/target
