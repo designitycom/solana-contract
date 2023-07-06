@@ -1,1 +1,5 @@
 /target
+/program/target
+/program/test-ledger
+/node_modules
+/test-ledger
