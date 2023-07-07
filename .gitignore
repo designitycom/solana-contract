@@ -2,3 +2,10 @@
 /solana-hello/dist
 /solana-hello/node_modules
 /solana-hello/src/program/target
+
+/second-sample/node_modules
+/second-sample/src/sum/target
+/second-sample/src/square/target
+/second-sample/node_modules
+/second-sample/dist
+/second-sample/src/test-ledger

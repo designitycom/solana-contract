@@ -41,11 +41,11 @@ import {
     Generate an account (keypair) to transact with our program
     */
     const triggerKeypair = Keypair.generate();
-    const airdropRequest = await connection.requestAirdrop(
-      triggerKeypair.publicKey,
-      LAMPORTS_PER_SOL,
-    );
-    await connection.confirmTransaction(airdropRequest);
+    // const airdropRequest = await connection.requestAirdrop(
+    //   triggerKeypair.publicKey,
+    //   LAMPORTS_PER_SOL,
+    // );
+    // await connection.confirmTransaction(airdropRequest);
   
     /*
     Conduct a transaction with our program
