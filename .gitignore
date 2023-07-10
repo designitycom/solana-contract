@@ -9,3 +9,6 @@
 /second-sample/node_modules
 /second-sample/dist
 /second-sample/src/test-ledger
+
+/transfer-sol/node_modules/
+/transfer-sol/program/target/

@@ -1,0 +1,31 @@
+{
+  "name": "rust-p2p",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Coding-and-Crypto/Rust-Solana-Tutorial.git"
+  },
+  "scripts": {
+    "clean": "./cicd/cicd.sh clean",
+    "reset": "./cicd/cicd.sh reset",
+    "build": "./cicd/cicd.sh build",
+    "deploy": "./cicd/cicd.sh deploy",
+    "reset-and-build": "./cicd/cicd.sh reset-and-build",
+    "simulation": "ts-node ./client/main.ts"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.33.0",
+    "buffer-layout": "^1.2.2"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/node": "^15.6.1",
+    "prettier": "^2.3.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
