@@ -11,4 +11,13 @@
 /second-sample/src/test-ledger
 
 /transfer-sol/node_modules/
+/transfer-sol/_dist/
+/transfer-sol/accounts/
 /transfer-sol/program/target/
+
+
+/mint-nft/node_modules/
+/mint-nft/dist/
+/mint-nft/accounts/
+/mint-nft/program/target/
+/mint-nft/mint/target
